@@ -4,8 +4,11 @@ const phrases = [
   "Código não quebrou hoje? Suspeito…",
   "Automatize primeiro, pergunte depois.",
   "Se dá pra fazer na mão, dá pra automatizar.",
-  "Mais logs, menos caos.",
+  "Mais logs, menos caos."
 ];
+
+let matrixInterval = null;
+let matrixCanvas = null;
 
 function setRandomPhrase() {
   const el = document.getElementById("dynamic-phrase");
@@ -14,7 +17,6 @@ function setRandomPhrase() {
   el.textContent = random;
 }
 
-// Card noturno (00h - 03h)
 function toggleNightCard() {
   const card = document.getElementById("card-night");
   if (!card) return;
@@ -27,7 +29,6 @@ function toggleNightCard() {
   }
 }
 
-// Footer triple click easter egg
 let footerClickCount = 0;
 let footerClickTimer = null;
 
@@ -43,7 +44,7 @@ function setupFooterSecret() {
 
     footerClickTimer = setTimeout(() => {
       footerClickCount = 0;
-    }, 700); // 0.7s pra dar 3 cliques rápidos
+    }, 700);
 
     if (footerClickCount >= 3) {
       footerClickCount = 0;
@@ -52,7 +53,6 @@ function setupFooterSecret() {
   });
 }
 
-// Konami Code versão João Albero: ↑↑↓↓←→←→ J V A
 const konamiSequence = [
   "ArrowUp",
   "ArrowUp",
@@ -64,7 +64,7 @@ const konamiSequence = [
   "ArrowRight",
   "KeyJ",
   "KeyV",
-  "KeyA",
+  "KeyA"
 ];
 
 let keyBuffer = [];
@@ -102,7 +102,74 @@ function activateAlberoMode() {
   }
 }
 
-// Terminal básico (por enquanto só ecoa e avisa sobre 'help')
+function startMatrixEffect() {
+  if (matrixInterval) return;
+
+  const overlay = document.getElementById("matrix-overlay");
+  if (!overlay) return;
+
+  overlay.classList.remove("hidden");
+  overlay.innerHTML = "";
+
+  const canvas = document.createElement("canvas");
+  matrixCanvas = canvas;
+  overlay.appendChild(canvas);
+
+  const ctx = canvas.getContext("2d");
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  const chars = "01█▓░<>[]{}#@$&";
+  const fontSize = 16;
+  const columns = Math.floor(canvas.width / fontSize);
+  const drops = [];
+
+  for (let i = 0; i < columns; i++) {
+    drops[i] = Math.floor(Math.random() * canvas.height / fontSize);
+  }
+
+  matrixInterval = setInterval(() => {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#00ff7f";
+    ctx.font = fontSize + "px JetBrains Mono";
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = chars.charAt(Math.floor(Math.random() * chars.length));
+      const x = i * fontSize;
+      const y = drops[i] * fontSize;
+
+      ctx.fillText(text, x, y);
+
+      if (y > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      } else {
+        drops[i]++;
+      }
+    }
+  }, 50);
+}
+
+function stopMatrixEffect() {
+  const overlay = document.getElementById("matrix-overlay");
+  if (!overlay) return;
+
+  if (matrixInterval) {
+    clearInterval(matrixInterval);
+    matrixInterval = null;
+  }
+
+  overlay.classList.add("hidden");
+  overlay.innerHTML = "";
+}
+
 function setupTerminal() {
   const input = document.getElementById("terminal-input");
   const body = document.getElementById("terminal-body");
@@ -116,18 +183,75 @@ function setupTerminal() {
     body.scrollTop = body.scrollHeight;
   }
 
+  function printEmptyLine() {
+    printLine("");
+  }
+
   input.addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       const value = input.value.trim();
       if (!value) return;
 
-      printLine(`joao@albero:~$ ${value}`);
+      const lower = value.toLowerCase();
+      printLine("joao@albero:~$ " + value);
 
-      // Por enquanto só um comportamento inicial
-      if (value.toLowerCase() === "help") {
-        printLine("Comandos em breve: about, skills, projects, show cv, unlock, matrix, play snake...");
+      if (lower === "help") {
+        printLine("Comandos disponíveis:");
+        printLine("  help         - mostra esta ajuda");
+        printLine("  about        - resumo sobre mim");
+        printLine("  skills       - principais tecnologias");
+        printLine("  projects     - alguns projetos em destaque");
+        printLine("  show cv      - currículo em PDF (em breve)");
+        printLine("  matrix       - ativa o modo Matrix");
+        printLine("  matrix off   - desativa o modo Matrix");
+        printLine("  play snake   - minigame Snake (em breve)");
+        printLine("  clear        - limpa o terminal");
+        printEmptyLine();
+      } else if (lower === "about") {
+        printLine("Sou estudante de Ciência da Computação e desenvolvedor focado em automação, back-end");
+        printLine("e segurança. Curto transformar processos manuais em soluções inteligentes.");
+        printEmptyLine();
+      } else if (lower === "skills") {
+        printLine("Principais stacks e ferramentas:");
+        printLine("- Python (automação, RPA, scripts para ambiente corporativo)");
+        printLine("- JavaScript / Node.js");
+        printLine("- Git e GitHub");
+        printLine("- APIs REST e integrações");
+        printLine("- Bancos de Dados");
+        printLine("- Linux / Bash");
+        printEmptyLine();
+      } else if (lower === "projects") {
+        printLine("Alguns projetos em destaque:");
+        printLine("- Fast Seguros Automation: automação real para corretora de seguros.");
+        printLine("- Outros projetos públicos: github.com/Joaolbero");
+        printEmptyLine();
+      } else if (lower === "show cv") {
+        printLine("Em breve: download direto do meu currículo em PDF por aqui.");
+        printEmptyLine();
+      } else if (lower === "matrix") {
+        if (matrixInterval) {
+          printLine("Modo Matrix já está ativo. Use 'matrix off' para desativar.");
+        } else {
+          printLine("Ativando modo Matrix...");
+          startMatrixEffect();
+        }
+        printEmptyLine();
+      } else if (lower === "matrix off" || lower === "matrix stop" || lower === "matrix end") {
+        if (matrixInterval) {
+          printLine("Desativando modo Matrix.");
+          stopMatrixEffect();
+        } else {
+          printLine("Modo Matrix não está ativo.");
+        }
+        printEmptyLine();
+      } else if (lower === "play snake") {
+        printLine("Em breve: minigame Snake jogável dentro do terminal.");
+        printEmptyLine();
+      } else if (lower === "clear") {
+        body.innerHTML = "";
       } else {
-        printLine("Comando ainda não implementado. Tente 'help'.");
+        printLine("Comando não reconhecido. Digite 'help' para ver a lista.");
+        printEmptyLine();
       }
 
       input.value = "";
@@ -135,7 +259,6 @@ function setupTerminal() {
   });
 }
 
-// Inicialização
 document.addEventListener("DOMContentLoaded", () => {
   setRandomPhrase();
   toggleNightCard();

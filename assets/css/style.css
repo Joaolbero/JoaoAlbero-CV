@@ -428,6 +428,19 @@ body {
   color: var(--accent);
 }
 
+#matrix-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+#matrix-overlay canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
 .hidden {
   display: none !important;
 }

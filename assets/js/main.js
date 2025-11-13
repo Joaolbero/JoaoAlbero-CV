@@ -118,24 +118,35 @@ function startMatrixEffect() {
   const ctx = canvas.getContext("2d");
 
   function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const rect = overlay.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
   }
 
   resizeCanvas();
   window.addEventListener("resize", resizeCanvas);
 
+  overlay.onclick = () => {
+    stopMatrixEffect();
+  };
+
   const chars = "01█▓░<>[]{}#@$&";
   const fontSize = 16;
-  const columns = Math.floor(canvas.width / fontSize);
-  const drops = [];
+  let columns = Math.floor(canvas.width / fontSize);
+  let drops = [];
 
-  for (let i = 0; i < columns; i++) {
-    drops[i] = Math.floor(Math.random() * canvas.height / fontSize);
+  function resetDrops() {
+    columns = Math.floor(canvas.width / fontSize);
+    drops = [];
+    for (let i = 0; i < columns; i++) {
+      drops[i] = Math.floor(Math.random() * canvas.height / fontSize);
+    }
   }
 
+  resetDrops();
+
   matrixInterval = setInterval(() => {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.18)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "#00ff7f";
@@ -169,6 +180,12 @@ function stopMatrixEffect() {
   overlay.classList.add("hidden");
   overlay.innerHTML = "";
 }
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    stopMatrixEffect();
+  }
+});
 
 function setupTerminal() {
   const input = document.getElementById("terminal-input");
@@ -230,7 +247,7 @@ function setupTerminal() {
         printEmptyLine();
       } else if (lower === "matrix") {
         if (matrixInterval) {
-          printLine("Modo Matrix já está ativo. Use 'matrix off' para desativar.");
+          printLine("Modo Matrix já está ativo. Use 'matrix off' para desativar ou clique na janela.");
         } else {
           printLine("Ativando modo Matrix...");
           startMatrixEffect();

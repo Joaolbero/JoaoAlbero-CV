@@ -1,6 +1,6 @@
 const phrases = [
   "Let him cook...",
-  "Compilando perdão, aguarde.",
+  "Compilando, aguarde...",
   "Código não quebrou hoje? Suspeito…",
   "Automatize primeiro, pergunte depois.",
   "Se dá pra fazer na mão, dá pra automatizar.",
@@ -8,7 +8,6 @@ const phrases = [
 ];
 
 let matrixInterval = null;
-let matrixCanvas = null;
 
 function setRandomPhrase() {
   const el = document.getElementById("dynamic-phrase");
@@ -27,6 +26,23 @@ function toggleNightCard() {
   } else {
     card.classList.add("hidden");
   }
+}
+
+function setupExternalLinks() {
+  const buttons = document.querySelectorAll(".external-link");
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const url = btn.getAttribute("data-url");
+      if (!url) return;
+
+      if (url === "#cv") {
+        alert("PDF ainda não disponível — será liberado em breve!");
+        return;
+      }
+
+      window.open(url, "_blank");
+    });
+  });
 }
 
 let footerClickCount = 0;
@@ -106,14 +122,10 @@ function startMatrixEffect() {
   if (matrixInterval) return;
 
   const overlay = document.getElementById("matrix-overlay");
-  if (!overlay) return;
+  const canvas = document.getElementById("matrix-canvas");
+  if (!overlay || !canvas) return;
 
   overlay.classList.remove("hidden");
-  overlay.innerHTML = "";
-
-  const canvas = document.createElement("canvas");
-  matrixCanvas = canvas;
-  overlay.appendChild(canvas);
 
   const ctx = canvas.getContext("2d");
 
@@ -178,7 +190,6 @@ function stopMatrixEffect() {
   }
 
   overlay.classList.add("hidden");
-  overlay.innerHTML = "";
 }
 
 window.addEventListener("keydown", (event) => {
@@ -282,4 +293,5 @@ document.addEventListener("DOMContentLoaded", () => {
   setupFooterSecret();
   setupKonamiCode();
   setupTerminal();
+  setupExternalLinks();
 });

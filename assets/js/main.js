@@ -1,4 +1,3 @@
-// Frases aleatórias
 const phrases = [
   "Let him cook...",
   "Compilando perdão, aguarde.",

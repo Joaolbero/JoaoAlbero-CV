@@ -25,7 +25,6 @@ body {
   font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Glow de fundo */
 .background-glow {
   position: fixed;
   inset: 0;
@@ -36,8 +35,6 @@ body {
   opacity: 0.9;
   z-index: -1;
 }
-
-/* HEADER */
 
 .top-header {
   display: flex;
@@ -101,15 +98,11 @@ body {
   width: 100%;
 }
 
-/* LAYOUT PRINCIPAL */
-
 .container {
   max-width: 1150px;
   margin: 0 auto;
   padding: 24px 7% 60px;
 }
-
-/* HERO */
 
 .hero {
   display: grid;
@@ -239,8 +232,6 @@ body {
   background: rgba(41, 182, 246, 0.28);
 }
 
-/* SEÇÕES */
-
 .section {
   margin-top: 36px;
   padding: 18px 16px 20px;
@@ -260,8 +251,6 @@ body {
   color: var(--muted);
 }
 
-/* SKILLS GRID */
-
 .skills-grid {
   display: flex;
   flex-wrap: wrap;
@@ -276,8 +265,6 @@ body {
   border: 1px solid rgba(33, 150, 243, 0.35);
   font-size: 0.8rem;
 }
-
-/* PROJECTS */
 
 .projects-grid {
   display: grid;
@@ -318,54 +305,31 @@ body {
   background: rgba(41, 182, 246, 0.3);
 }
 
-/* TERMINAL */
-
 .terminal-section {
   margin-top: 40px;
 }
 
 .terminal-window {
   margin-top: 10px;
-  border-radius: 14px;
-  background: #020308;
-  border: 1px solid #263238;
+  border-radius: 6px;
+  background: #300a24;
+  border: 1px solid #1e0315;
   overflow: hidden;
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
 }
 
 .terminal-header {
   display: flex;
   align-items: center;
-  gap: 6px;
   padding: 6px 10px;
-  background: linear-gradient(to right, #111827, #0b1020);
-  border-bottom: 1px solid #263238;
-}
-
-.terminal-header .dot {
-  width: 11px;
-  height: 11px;
-  border-radius: 999px;
-  display: inline-block;
-}
-
-.terminal-header .red {
-  background: var(--danger);
-}
-
-.terminal-header .yellow {
-  background: var(--warning);
-}
-
-.terminal-header .green {
-  background: var(--success);
+  background: #2c001e;
+  border-bottom: 1px solid #1e0315;
 }
 
 .terminal-title {
   font-family: "JetBrains Mono", monospace;
   font-size: 0.8rem;
-  color: var(--muted);
-  margin-left: 6px;
+  color: #f2d5ff;
 }
 
 .terminal-body {
@@ -374,7 +338,8 @@ body {
   padding: 10px 12px 8px;
   height: 190px;
   overflow-y: auto;
-  color: #e0f2f1;
+  color: #fcefff;
+  background: #300a24;
 }
 
 .terminal-line {
@@ -382,7 +347,7 @@ body {
 }
 
 .terminal-command {
-  color: var(--accent);
+  color: #66ff99;
 }
 
 .terminal-input-area {
@@ -390,14 +355,14 @@ body {
   align-items: center;
   gap: 6px;
   padding: 6px 10px 9px;
-  background: #020308;
-  border-top: 1px solid #263238;
+  background: #300a24;
+  border-top: 1px solid #1e0315;
 }
 
 .prompt {
   font-family: "JetBrains Mono", monospace;
   font-size: 0.83rem;
-  color: #9fa8da;
+  color: #d286ff;
 }
 
 #terminal-input {
@@ -405,12 +370,10 @@ body {
   background: transparent;
   border: none;
   outline: none;
-  color: #e0f2f1;
+  color: #fcefff;
   font-family: "JetBrains Mono", monospace;
   font-size: 0.83rem;
 }
-
-/* SEÇÃO SECRETA */
 
 .secret-section {
   border-style: dashed;
@@ -424,8 +387,6 @@ body {
   font-size: 0.85rem;
   color: var(--muted);
 }
-
-/* FOOTER */
 
 .footer {
   margin-top: 32px;
@@ -445,8 +406,6 @@ body {
 .footer-note {
   opacity: 0.8;
 }
-
-/* FOOTER SECRET PANEL */
 
 .footer-secret {
   position: fixed;
@@ -469,17 +428,8 @@ body {
   color: var(--accent);
 }
 
-/* ESTADOS / UTILITÁRIOS */
-
 .hidden {
   display: none !important;
-}
-
-/* MODO JOÃO ALBERO 200% */
-
-.albero-mode body,
-body.albero-mode {
-  /* fallback caso aplicarmos no body direto */
 }
 
 body.albero-mode {
@@ -496,8 +446,6 @@ body.albero-mode .terminal-window {
 body.albero-mode .hero-tagline {
   text-shadow: 0 0 12px rgba(41, 182, 246, 0.85);
 }
-
-/* RESPONSIVO */
 
 @media (max-width: 800px) {
   .hero {

@@ -85,20 +85,18 @@ function setupKonamiCode() {
 }
 
 function activateAlberoMode() {
-  // Classe no body pra aplicar visual turbinado
   document.body.classList.toggle("albero-mode");
 
   const secretSection = document.getElementById("secret-section");
   if (secretSection) {
-    secretSection.classList.remove("hidden");
+    secretSection.classList.toggle("hidden");
   }
 
   const terminalBody = document.getElementById("terminal-body");
   if (terminalBody) {
     const line = document.createElement("div");
     line.className = "terminal-line";
-    line.innerHTML =
-      ">> JOÃO ALBERO MODE 200% ATIVADO. Novos segredos podem ter sido liberados...";
+    line.innerHTML = ">> Modo Turbo Ativado — Neon intensificado e área secreta liberada.";
     terminalBody.appendChild(line);
     terminalBody.scrollTop = terminalBody.scrollHeight;
   }

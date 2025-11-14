@@ -315,7 +315,7 @@ function toggleNightCard() {
   const card = document.getElementById("card-night");
   if (!card) return;
   const now = new Date();
-  const hour = 1;
+  const hour = now.getHours();
   if (hour >= 0 && hour < 3) {
     card.classList.remove("hidden");
   } else {
@@ -552,14 +552,6 @@ function setupTerminal() {
   });
 }
 
-function setupNightAck() {
-  const btn = document.getElementById("night-ack-btn");
-  if (!btn) return;
-  btn.onclick = function () {
-    alert(translations["night.ackMessage"][currentLang]);
-  };
-}
-
 function setupLangToggle() {
   const btn = document.getElementById("lang-toggle");
   if (!btn) return;
@@ -613,6 +605,10 @@ function setupCvCard() {
   });
 }
 
+function nightAck() {
+  alert(translations["night.ackMessage"][currentLang]);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const savedLang = (() => {
     try {
@@ -633,7 +629,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupFooterSecret();
   setupKonamiCode();
   setupTerminal();
-  setupNightAck();
   setupLangToggle();
   setupCvCard();
 });

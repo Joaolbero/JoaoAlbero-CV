@@ -37,6 +37,7 @@
 
   <main class="container">
     <section class="hero">
+      <!-- Coluna esquerda -->
       <div>
         <h1 data-i18n="hero.title">Desenvolvedor focado em Automação, Back-end e Segurança</h1>
         <p class="hero-subtitle" data-i18n="hero.subtitle">
@@ -50,10 +51,11 @@
         </div>
       </div>
 
+      <!-- Coluna direita -->
       <div>
         <div class="hero-cards">
-          <a href="https://github.com/Joaolbero" target="_blank" rel="noopener noreferrer" class="card card-link"
-            id="card-github">
+          <a href="https://github.com/Joaolbero" target="_blank" rel="noopener noreferrer"
+            class="card card-link" id="card-github">
             <h3 data-i18n="cards.github.title">GitHub</h3>
             <p data-i18n="cards.github.text">Repositórios, automações e experimentos.</p>
             <span class="card-button-like" data-i18n="cards.github.button">Abrir GitHub</span>
@@ -66,26 +68,20 @@
             <span class="card-button-like" data-i18n="cards.linkedin.button">Abrir LinkedIn</span>
           </a>
 
-          <a href="assets/cv/Joao_Vitor_Albero-CV.pdf" target="_blank" rel="noopener noreferrer" class="card card-link"
-            id="card-cv">
+          <a href="assets/cv/Joao_Vitor_Albero-CV.pdf" target="_blank" rel="noopener noreferrer"
+            class="card card-link" id="card-cv">
             <h3 data-i18n="cards.cv.title">Currículo PDF</h3>
             <p data-i18n="cards.cv.text">Versão em PDF do meu CV.</p>
-            <span class="card-button-like" data-i18n="cards.cv.button">
-              Baixar CV
-            </span>
+            <span class="card-button-like" data-i18n="cards.cv.button">Baixar CV</span>
           </a>
+        </div>
 
-
-          <a href="#" class="card card-link hidden" id="card-night" onclick="nightAck(); return false;">
-            <h3 data-i18n="night.title">Noturno Mode 😈</h3>
-            <p data-i18n="night.text">Os devs verdadeiros ainda estão acordados.</p>
-            <span class="card-button-like" data-i18n="night.button">
-              Reconhecer
-            </span>
-          </a>
-
-
-
+        <a href="#" class="card card-link hidden" id="card-night" onclick="nightAck(); return false;">
+          <h3 data-i18n="night.title">Noturno Mode 😈</h3>
+          <p data-i18n="night.text">Os devs verdadeiros ainda estão acordados.</p>
+          <span class="card-button-like" data-i18n="night.button">Reconhecer</span>
+        </a>
+      </div>
     </section>
 
     <section id="about" class="section">
@@ -99,7 +95,6 @@
         a infraestrutura tecnológica e acelerar o desempenho operacional das empresas.
       </p>
     </section>
-
 
     <section id="skills" class="section">
       <h2 data-i18n="skills.title">Skills & Stack</h2>
@@ -115,7 +110,6 @@
         <span data-i18n="skills.english">Inglês Avançado</span>
       </div>
     </section>
-
 
     <section id="projects" class="section">
       <h2 data-i18n="projects.title">Projetos em Destaque</h2>
@@ -190,7 +184,6 @@
       </div>
     </section>
 
-
     <section id="terminal" class="section terminal-section">
       <h2 data-i18n="terminal.title">Terminal Interativo</h2>
       <div class="terminal-window">
@@ -202,7 +195,6 @@
             Bem-vindo ao terminal. Digite <span class="terminal-command">help</span> para começar.
           </div>
         </div>
-
 
         <div class="terminal-input-area">
           <span class="prompt">joao@albero:~$</span>
@@ -241,14 +233,24 @@
     <p data-i18n="footer.secret">Você desbloqueou o Dev Curioso 😎</p>
   </div>
 
+  <!-- Snake: overlay único, com contador e dica -->
   <div id="snake-overlay" class="hidden">
-    <div id="snake-header">
-      <span id="snake-title" data-i18n="snake.title">Snake – João Albero Mode</span>
-      <span id="snake-tip" data-i18n="snake.tip">
+    <div id="snake-panel">
+      <div class="snake-header">
+        <span id="snake-title" data-i18n="snake.title">Snake – João Albero Mode</span>
+        <span id="snake-score-label">
+          <span data-i18n="snake.scoreLabel">Frutas:</span>
+          <span id="snake-score">0</span>
+        </span>
+      </div>
+      <canvas id="snake-canvas" width="360" height="280"></canvas>
+      <div id="snake-tip" data-i18n="snake.tip">
         Use as teclas "W A S D" ou setas. ESC para sair.
-      </span>
+      </div>
+      <div id="snake-hint" data-i18n="snake.hint">
+        Dica: comer uma fruta é normal… mas ao chegar em 10… algo muda 👾
+      </div>
     </div>
-    <canvas id="snake-canvas" width="360" height="280"></canvas>
   </div>
 
   <div id="matrix-overlay" class="hidden">

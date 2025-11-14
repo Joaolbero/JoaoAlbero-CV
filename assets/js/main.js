@@ -111,6 +111,14 @@ const translations = {
     pt: "Use W A S D ou setas. ESC para sair.",
     en: "Use W A S D or arrow keys. ESC to exit."
   },
+  "snake.scoreLabel": {
+    pt: "Frutas:",
+    en: "Fruits:"
+  },
+  "snake.hint": {
+    pt: "Dica: algo especial acontece se você pegar 10 frutas. 😉",
+    en: "Hint: something special happens if you grab 10 fruits. 😉"
+  },
   "about.title": {
     pt: "Sobre",
     en: "About"
@@ -119,7 +127,6 @@ const translations = {
     pt: "Sou João Vitor Albero, 21 anos, concluindo o curso de Ciência da Computação. Atuo com automações reais em ambiente corporativo, desenvolvendo soluções em Python e outras tecnologias para reduzir trabalho manual, eliminar erros operacionais e aumentar a eficiência dos processos. Meu objetivo é atuar nas áreas de Segurança da Informação ou Desenvolvimento de Software, aplicando habilidades em programação, automação e proteção de dados para fortalecer a infraestrutura tecnológica e acelerar o desempenho operacional das empresas.",
     en: "I am João Vitor Albero, 21 years old, finishing my Computer Science degree. I work with real-world automations in corporate environments, developing solutions in Python and other technologies to reduce manual work, eliminate operational errors and increase process efficiency. My goal is to work in Information Security or Software Development, applying skills in programming, automation and data protection to strengthen the technological infrastructure and accelerate companies' operational performance."
   },
-
   "skills.python": {
     pt: "Python (Automação, RPA)",
     en: "Python (Automation, RPA)"
@@ -156,8 +163,6 @@ const translations = {
     pt: "Inglês Avançado",
     en: "Advanced English"
   },
-
-
   "projects.title": {
     pt: "Projetos em Destaque",
     en: "Featured Projects"
@@ -272,7 +277,7 @@ const translations = {
       "  show cv      - abrir currículo em PDF",
       "  matrix       - ativa o modo Matrix",
       "  matrix off   - desativa o modo Matrix",
-      "  play snake   - minigame Snake",
+      "  play snake   - minigame Snake (tente pegar 10 frutas!)",
       "  clear        - limpa o terminal"
     ],
     en: [
@@ -284,7 +289,7 @@ const translations = {
       "  show cv      - open resume in PDF",
       "  matrix       - activates Matrix mode",
       "  matrix off   - deactivates Matrix mode",
-      "  play snake   - Snake minigame",
+      "  play snake   - Snake minigame (try to reach 10 fruits!)",
       "  clear        - clears the terminal"
     ]
   },
@@ -338,7 +343,6 @@ const translations = {
       "Starting download of my resume in PDF..."
     ]
   },
-
   "terminal.matrix.alreadyOn": {
     pt: "Modo Matrix já está ativo. Use 'matrix off' para desativar ou clique na janela.",
     en: "Matrix mode is already active. Use 'matrix off' to turn it off or click the window."
@@ -363,6 +367,16 @@ const translations = {
     pt: "Game over! Digite 'play snake' para tentar novamente.",
     en: "Game over! Type 'play snake' to try again."
   },
+  "terminal.snake.easter.lines": {
+    pt: [
+      "🔥 Easter egg do Snake desbloqueado! Você pegou 10 frutas.",
+      "Modo secreto liberado automaticamente. Explore o site ;)"
+    ],
+    en: [
+      "🔥 Snake easter egg unlocked! You reached 10 fruits.",
+      "Secret mode has been unlocked automatically. Explore the site ;)"
+    ]
+  },
   "terminal.unknown": {
     pt: "Comando não reconhecido. Digite 'help' para ver a lista.",
     en: "Unknown command. Type 'help' to see the list."
@@ -372,6 +386,8 @@ const translations = {
 let matrixInterval = null;
 let snakeInterval = null;
 let snakeState = null;
+let snakeScore = 0;
+let snakeEggUnlocked = false;
 
 function setRandomPhrase() {
   const el = document.getElementById("dynamic-phrase");
@@ -466,6 +482,8 @@ function activateAlberoMode() {
   }
 }
 
+/* MATRIX */
+
 function startMatrixEffect() {
   if (matrixInterval) return;
 
@@ -540,6 +558,40 @@ function stopMatrixEffect() {
   overlay.classList.add("hidden");
 }
 
+/* SNAKE */
+
+function updateSnakeScore() {
+  const scoreEl = document.getElementById("snake-score");
+  if (scoreEl) {
+    scoreEl.textContent = String(snakeScore);
+  }
+}
+
+function triggerSnakeEasterEgg() {
+  snakeEggUnlocked = true;
+
+  const body = document.getElementById("terminal-body");
+  const lines = translations["terminal.snake.easter.lines"][currentLang];
+  if (body && lines) {
+    lines.forEach((text) => {
+      const div = document.createElement("div");
+      div.className = "terminal-line";
+      div.textContent = text;
+      body.appendChild(div);
+    });
+    body.scrollTop = body.scrollHeight;
+  }
+
+  const secretSection = document.getElementById("secret-section");
+  if (secretSection) {
+    secretSection.classList.remove("hidden");
+  }
+  const footerSecret = document.getElementById("footer-secret");
+  if (footerSecret) {
+    footerSecret.classList.remove("hidden");
+  }
+}
+
 function startSnakeGame() {
   if (snakeInterval) return;
   const overlay = document.getElementById("snake-overlay");
@@ -565,6 +617,10 @@ function startSnakeGame() {
     maxLength: 4,
     food: null
   };
+
+  snakeScore = 0;
+  snakeEggUnlocked = false;
+  updateSnakeScore();
 
   for (let i = 0; i < snakeState.maxLength; i++) {
     snakeState.tail.push({ x: snakeState.x - i, y: snakeState.y });
@@ -616,6 +672,13 @@ function updateSnake() {
 
   if (snakeState.food && snakeState.x === snakeState.food.x && snakeState.y === snakeState.food.y) {
     snakeState.maxLength++;
+    snakeScore++;
+    updateSnakeScore();
+
+    if (snakeScore >= 10 && !snakeEggUnlocked) {
+      triggerSnakeEasterEgg();
+    }
+
     placeSnakeFood();
   }
 
@@ -707,12 +770,16 @@ function handleSnakeKey(event) {
   snakeState.vy = vy;
 }
 
+/* ESC global fecha Matrix e Snake */
+
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     stopMatrixEffect();
     stopSnakeGame();
   }
 });
+
+/* TERMINAL */
 
 function setupTerminal() {
   const input = document.getElementById("terminal-input");
@@ -768,7 +835,6 @@ function setupTerminal() {
         document.body.removeChild(link);
 
         printEmptyLine();
-
       } else if (lower === "matrix") {
         if (matrixInterval) {
           const line = translations["terminal.matrix.alreadyOn"][currentLang];
@@ -807,6 +873,8 @@ function setupTerminal() {
   });
 }
 
+/* LANG TOGGLE */
+
 function setupLangToggle() {
   const btn = document.getElementById("lang-toggle");
   if (!btn) return;
@@ -821,7 +889,7 @@ function setLanguage(lang) {
   currentLang = lang;
   try {
     localStorage.setItem("joaoalbero_cv_lang", lang);
-  } catch (e) { }
+  } catch (e) {}
 
   const elements = document.querySelectorAll("[data-i18n]");
   elements.forEach((el) => {
@@ -851,6 +919,8 @@ function setLanguage(lang) {
   setRandomPhrase();
 }
 
+/* CV CARD */
+
 function setupCvCard() {
   const cvCard = document.getElementById("card-cv");
   if (!cvCard) return;
@@ -860,9 +930,13 @@ function setupCvCard() {
   });
 }
 
+/* NOTURNO */
+
 function nightAck() {
   alert(translations["night.ackMessage"][currentLang]);
 }
+
+/* BOOT */
 
 document.addEventListener("DOMContentLoaded", () => {
   const savedLang = (() => {

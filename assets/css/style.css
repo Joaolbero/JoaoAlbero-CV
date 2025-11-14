@@ -1,3 +1,23 @@
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lang-toggle {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-soft);
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.lang-toggle:hover {
+  background: rgba(41, 182, 246, 0.12);
+}
+
 :root {
   --bg: #050611;
   --bg-elevated: #0b0d1a;

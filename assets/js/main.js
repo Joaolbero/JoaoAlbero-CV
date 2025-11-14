@@ -214,7 +214,7 @@ const translations = {
       "  about        - resumo sobre mim",
       "  skills       - principais tecnologias",
       "  projects     - alguns projetos em destaque",
-      "  show cv      - currículo em PDF (em breve)",
+      "  show cv      - abrir currículo em PDF",
       "  matrix       - ativa o modo Matrix",
       "  matrix off   - desativa o modo Matrix",
       "  play snake   - minigame Snake",
@@ -226,7 +226,7 @@ const translations = {
       "  about        - short summary about me",
       "  skills       - main technologies",
       "  projects     - some featured projects",
-      "  show cv      - resume in PDF (coming soon)",
+      "  show cv      - open resume in PDF",
       "  matrix       - activates Matrix mode",
       "  matrix off   - deactivates Matrix mode",
       "  play snake   - Snake minigame",
@@ -277,10 +277,10 @@ const translations = {
   },
   "terminal.showcv.lines": {
     pt: [
-      "Em breve: download direto do meu currículo em PDF por aqui."
+      "Abrindo meu currículo em PDF em uma nova aba."
     ],
     en: [
-      "Coming soon: direct download of my resume in PDF from here."
+      "Opening my resume PDF in a new tab."
     ]
   },
   "terminal.matrix.alreadyOn": {
@@ -702,31 +702,38 @@ function setupTerminal() {
       } else if (lower === "show cv") {
         const lines = translations["terminal.showcv.lines"][currentLang];
         lines.forEach(printLine);
+        window.open("assets/cv/Joao_Vitor_Albero-CV.pdf", "_blank");
         printEmptyLine();
       } else if (lower === "matrix") {
         if (matrixInterval) {
-          printLine(translations["terminal.matrix.alreadyOn"][currentLang]);
+          const line = translations["terminal.matrix.alreadyOn"][currentLang];
+          printLine(line);
         } else {
-          printLine(translations["terminal.matrix.turningOn"][currentLang]);
+          const line = translations["terminal.matrix.turningOn"][currentLang];
+          printLine(line);
           startMatrixEffect();
         }
         printEmptyLine();
       } else if (lower === "matrix off" || lower === "matrix stop" || lower === "matrix end") {
         if (matrixInterval) {
-          printLine(translations["terminal.matrix.turningOff"][currentLang]);
+          const line = translations["terminal.matrix.turningOff"][currentLang];
+          printLine(line);
           stopMatrixEffect();
         } else {
-          printLine(translations["terminal.matrix.notOn"][currentLang]);
+          const line = translations["terminal.matrix.notOn"][currentLang];
+          printLine(line);
         }
         printEmptyLine();
       } else if (lower === "play snake") {
-        printLine(translations["terminal.snake.start"][currentLang]);
+        const line = translations["terminal.snake.start"][currentLang];
+        printLine(line);
         startSnakeGame();
         printEmptyLine();
       } else if (lower === "clear") {
         body.innerHTML = "";
       } else {
-        printLine(translations["terminal.unknown"][currentLang]);
+        const line = translations["terminal.unknown"][currentLang];
+        printLine(line);
         printEmptyLine();
       }
 
@@ -784,7 +791,7 @@ function setupCvCard() {
   if (!cvCard) return;
   cvCard.addEventListener("click", (event) => {
     event.preventDefault();
-    alert(translations["terminal.showcv.lines"][currentLang][0]);
+    window.open("assets/cv/Joao_Vitor_Albero-CV.pdf", "_blank");
   });
 }
 

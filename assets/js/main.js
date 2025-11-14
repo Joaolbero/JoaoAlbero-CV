@@ -103,6 +103,14 @@ const translations = {
     pt: "Você ativou o Noturno Mode. Respeito total. 💻🌙",
     en: "You activated Night Mode. Maximum respect. 💻🌙"
   },
+  "snake.title": {
+    pt: "Snake – João Albero Mode",
+    en: "Snake – João Albero Mode"
+  },
+  "snake.tip": {
+    pt: "Use W A S D ou setas. ESC para sair.",
+    en: "Use W A S D or arrow keys. ESC to exit."
+  },
   "about.title": {
     pt: "Sobre",
     en: "About"
@@ -209,7 +217,7 @@ const translations = {
       "  show cv      - currículo em PDF (em breve)",
       "  matrix       - ativa o modo Matrix",
       "  matrix off   - desativa o modo Matrix",
-      "  play snake   - minigame Snake (em breve)",
+      "  play snake   - minigame Snake",
       "  clear        - limpa o terminal"
     ],
     en: [
@@ -221,7 +229,7 @@ const translations = {
       "  show cv      - resume in PDF (coming soon)",
       "  matrix       - activates Matrix mode",
       "  matrix off   - deactivates Matrix mode",
-      "  play snake   - Snake minigame (coming soon)",
+      "  play snake   - Snake minigame",
       "  clear        - clears the terminal"
     ]
   },
@@ -291,9 +299,13 @@ const translations = {
     pt: "Modo Matrix não está ativo.",
     en: "Matrix mode is not active."
   },
-  "terminal.snake.soon": {
-    pt: "Em breve: minigame Snake jogável dentro do terminal.",
-    en: "Coming soon: playable Snake minigame inside the terminal."
+  "terminal.snake.start": {
+    pt: "Iniciando Snake. Use W A S D ou setas para mover.",
+    en: "Starting Snake. Use W A S D or arrow keys to move."
+  },
+  "terminal.snake.gameOver": {
+    pt: "Game over! Digite 'play snake' para tentar novamente.",
+    en: "Game over! Type 'play snake' to try again."
   },
   "terminal.unknown": {
     pt: "Comando não reconhecido. Digite 'help' para ver a lista.",
@@ -302,6 +314,8 @@ const translations = {
 };
 
 let matrixInterval = null;
+let snakeInterval = null;
+let snakeState = null;
 
 function setRandomPhrase() {
   const el = document.getElementById("dynamic-phrase");
@@ -470,9 +484,177 @@ function stopMatrixEffect() {
   overlay.classList.add("hidden");
 }
 
+function startSnakeGame() {
+  if (snakeInterval) return;
+  const overlay = document.getElementById("snake-overlay");
+  const canvas = document.getElementById("snake-canvas");
+  if (!overlay || !canvas) return;
+
+  overlay.classList.remove("hidden");
+
+  const ctx = canvas.getContext("2d");
+  const gridSize = 16;
+  const cols = Math.floor(canvas.width / gridSize);
+  const rows = Math.floor(canvas.height / gridSize);
+
+  snakeState = {
+    gridSize,
+    cols,
+    rows,
+    x: Math.floor(cols / 2),
+    y: Math.floor(rows / 2),
+    vx: 1,
+    vy: 0,
+    tail: [],
+    maxLength: 4,
+    food: null
+  };
+
+  for (let i = 0; i < snakeState.maxLength; i++) {
+    snakeState.tail.push({ x: snakeState.x - i, y: snakeState.y });
+  }
+
+  placeSnakeFood();
+  drawSnake();
+
+  snakeInterval = setInterval(updateSnake, 110);
+  window.addEventListener("keydown", handleSnakeKey);
+}
+
+function placeSnakeFood() {
+  if (!snakeState) return;
+  let fx;
+  let fy;
+  let colliding = true;
+
+  while (colliding) {
+    fx = Math.floor(Math.random() * snakeState.cols);
+    fy = Math.floor(Math.random() * snakeState.rows);
+    colliding = snakeState.tail.some((seg) => seg.x === fx && seg.y === fy);
+  }
+
+  snakeState.food = { x: fx, y: fy };
+}
+
+function updateSnake() {
+  if (!snakeState) return;
+  snakeState.x += snakeState.vx;
+  snakeState.y += snakeState.vy;
+
+  if (
+    snakeState.x < 0 ||
+    snakeState.x >= snakeState.cols ||
+    snakeState.y < 0 ||
+    snakeState.y >= snakeState.rows
+  ) {
+    snakeGameOver();
+    return;
+  }
+
+  if (snakeState.tail.some((seg) => seg.x === snakeState.x && seg.y === snakeState.y)) {
+    snakeGameOver();
+    return;
+  }
+
+  snakeState.tail.unshift({ x: snakeState.x, y: snakeState.y });
+
+  if (snakeState.food && snakeState.x === snakeState.food.x && snakeState.y === snakeState.food.y) {
+    snakeState.maxLength++;
+    placeSnakeFood();
+  }
+
+  if (snakeState.tail.length > snakeState.maxLength) {
+    snakeState.tail.pop();
+  }
+
+  drawSnake();
+}
+
+function drawSnake() {
+  const canvas = document.getElementById("snake-canvas");
+  if (!canvas || !snakeState) return;
+  const ctx = canvas.getContext("2d");
+  const g = snakeState.gridSize;
+
+  ctx.fillStyle = "#020617";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  if (snakeState.food) {
+    ctx.fillStyle = "#f97316";
+    ctx.fillRect(
+      snakeState.food.x * g,
+      snakeState.food.y * g,
+      g - 2,
+      g - 2
+    );
+  }
+
+  ctx.fillStyle = "#22d3ee";
+  snakeState.tail.forEach((seg, index) => {
+    const size = index === 0 ? g : g - 2;
+    ctx.fillRect(seg.x * g, seg.y * g, size - 2, size - 2);
+  });
+}
+
+function snakeGameOver() {
+  stopSnakeGame();
+  const body = document.getElementById("terminal-body");
+  if (!body) return;
+  const line = document.createElement("div");
+  line.className = "terminal-line";
+  line.textContent = translations["terminal.snake.gameOver"][currentLang];
+  body.appendChild(line);
+  body.scrollTop = body.scrollHeight;
+}
+
+function stopSnakeGame() {
+  const overlay = document.getElementById("snake-overlay");
+  if (snakeInterval) {
+    clearInterval(snakeInterval);
+    snakeInterval = null;
+  }
+  snakeState = null;
+  if (overlay) overlay.classList.add("hidden");
+  window.removeEventListener("keydown", handleSnakeKey);
+}
+
+function handleSnakeKey(event) {
+  if (!snakeState) return;
+  const key = event.key;
+  let vx = snakeState.vx;
+  let vy = snakeState.vy;
+
+  if (key === "ArrowUp" || key === "w" || key === "W") {
+    if (snakeState.vy === 1) return;
+    vx = 0;
+    vy = -1;
+  } else if (key === "ArrowDown" || key === "s" || key === "S") {
+    if (snakeState.vy === -1) return;
+    vx = 0;
+    vy = 1;
+  } else if (key === "ArrowLeft" || key === "a" || key === "A") {
+    if (snakeState.vx === 1) return;
+    vx = -1;
+    vy = 0;
+  } else if (key === "ArrowRight" || key === "d" || key === "D") {
+    if (snakeState.vx === -1) return;
+    vx = 1;
+    vy = 0;
+  } else if (key === "Escape") {
+    stopSnakeGame();
+    return;
+  } else {
+    return;
+  }
+
+  snakeState.vx = vx;
+  snakeState.vy = vy;
+}
+
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     stopMatrixEffect();
+    stopSnakeGame();
   }
 });
 
@@ -538,7 +720,8 @@ function setupTerminal() {
         }
         printEmptyLine();
       } else if (lower === "play snake") {
-        printLine(translations["terminal.snake.soon"][currentLang]);
+        printLine(translations["terminal.snake.start"][currentLang]);
+        startSnakeGame();
         printEmptyLine();
       } else if (lower === "clear") {
         body.innerHTML = "";

@@ -315,7 +315,7 @@ function toggleNightCard() {
   const card = document.getElementById("card-night");
   if (!card) return;
   const now = new Date();
-  const hour = now.getHours();
+  const hour = 1;
   if (hour >= 0 && hour < 3) {
     card.classList.remove("hidden");
   } else {
@@ -555,9 +555,9 @@ function setupTerminal() {
 function setupNightAck() {
   const btn = document.getElementById("night-ack-btn");
   if (!btn) return;
-  btn.addEventListener("click", () => {
+  btn.onclick = function () {
     alert(translations["night.ackMessage"][currentLang]);
-  });
+  };
 }
 
 function setupLangToggle() {

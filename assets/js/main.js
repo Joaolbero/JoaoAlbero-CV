@@ -116,37 +116,48 @@ const translations = {
     en: "About"
   },
   "about.text": {
-    pt: "Sou estudante de Ciência da Computação e atuo com automações reais em ambiente corporativo, criando soluções em Python e outras tecnologias para reduzir trabalho manual e evitar erros. Tenho foco em Back-end, automação de processos e segurança da informação.",
-    en: "I am a Computer Science student working with real-world automations in corporate environments, creating solutions in Python and other technologies to reduce manual work and avoid errors. I am focused on Back-end, process automation, and information security."
+    pt: "Sou João Vitor Albero, 21 anos, concluindo o curso de Ciência da Computação. Atuo com automações reais em ambiente corporativo, desenvolvendo soluções em Python e outras tecnologias para reduzir trabalho manual, eliminar erros operacionais e aumentar a eficiência dos processos. Meu objetivo é atuar nas áreas de Segurança da Informação ou Desenvolvimento de Software, aplicando habilidades em programação, automação e proteção de dados para fortalecer a infraestrutura tecnológica e acelerar o desempenho operacional das empresas.",
+    en: "I am João Vitor Albero, 21 years old, finishing my Computer Science degree. I work with real-world automations in corporate environments, developing solutions in Python and other technologies to reduce manual work, eliminate operational errors and increase process efficiency. My goal is to work in Information Security or Software Development, applying skills in programming, automation and data protection to strengthen the technological infrastructure and accelerate companies' operational performance."
   },
-  "skills.title": {
-    pt: "Skills & Stack",
-    en: "Skills & Stack"
-  },
+
   "skills.python": {
     pt: "Python (Automação, RPA)",
     en: "Python (Automation, RPA)"
   },
+  "skills.java": {
+    pt: "Java",
+    en: "Java"
+  },
   "skills.js": {
-    pt: "JavaScript / Node.js",
-    en: "JavaScript / Node.js"
+    pt: "JavaScript",
+    en: "JavaScript"
+  },
+  "skills.html": {
+    pt: "HTML",
+    en: "HTML"
+  },
+  "skills.css": {
+    pt: "CSS",
+    en: "CSS"
+  },
+  "skills.scraping": {
+    pt: "Web Scraping",
+    en: "Web Scraping"
   },
   "skills.git": {
-    pt: "Git & GitHub",
-    en: "Git & GitHub"
+    pt: "Git",
+    en: "Git"
   },
-  "skills.apis": {
-    pt: "APIs REST",
-    en: "REST APIs"
+  "skills.office": {
+    pt: "Pacote Office",
+    en: "Office Suite"
   },
-  "skills.db": {
-    pt: "Banco de Dados",
-    en: "Databases"
+  "skills.english": {
+    pt: "Inglês Avançado",
+    en: "Advanced English"
   },
-  "skills.linux": {
-    pt: "Linux / Bash",
-    en: "Linux / Bash"
-  },
+
+
   "projects.title": {
     pt: "Projetos em Destaque",
     en: "Featured Projects"
@@ -159,7 +170,51 @@ const translations = {
     pt: "Sistema de automação para corretora de seguros, usando Python, Selenium e manipulação de planilhas.",
     en: "Automation system for an insurance brokerage, using Python, Selenium and spreadsheet handling."
   },
+  "projects.up.title": {
+    pt: "UP_Seguros",
+    en: "UP_Seguros"
+  },
+  "projects.up.desc": {
+    pt: "Aplicação desktop em Java Swing para simulações e cotações de seguros com múltiplas telas.",
+    en: "Java Swing desktop application for insurance simulations/quotations with multiple forms."
+  },
+  "projects.currency.title": {
+    pt: "currency-converter-api",
+    en: "currency-converter-api"
+  },
+  "projects.currency.desc": {
+    pt: "Conversor de moedas com API pública, CLI estilosa e fallback automático.",
+    en: "Currency converter with public API, stylish CLI and automatic fallback."
+  },
+  "projects.weather.title": {
+    pt: "weather_api",
+    en: "weather_api"
+  },
+  "projects.weather.desc": {
+    pt: "CLI para consultar climas e previsões usando as APIs Open-Meteo e OpenWeather.",
+    en: "CLI for weather queries and forecasts using Open-Meteo and OpenWeather APIs."
+  },
+  "projects.qr.title": {
+    pt: "qr-code-generator",
+    en: "qr-code-generator"
+  },
+  "projects.qr.desc": {
+    pt: "Gerador de QR Code com CLI e modo web usando Python, FastAPI e Segno.",
+    en: "QR Code generator with CLI and web mode using Python, FastAPI and Segno."
+  },
+  "projects.password.title": {
+    pt: "password-generator",
+    en: "password-generator"
+  },
+  "projects.password.desc": {
+    pt: "Gerador de senhas personalizável com modo CLI e modo interativo estilo hacker.",
+    en: "Customizable password generator with CLI and interactive hacker-style mode."
+  },
   "projects.fast.button": {
+    pt: "Ver no GitHub",
+    en: "View on GitHub"
+  },
+  "projects.button.github": {
     pt: "Ver no GitHub",
     en: "View on GitHub"
   },
@@ -277,12 +332,13 @@ const translations = {
   },
   "terminal.showcv.lines": {
     pt: [
-      "Abrindo meu currículo em PDF em uma nova aba."
+      "Iniciando download do meu currículo em PDF..."
     ],
     en: [
-      "Opening my resume PDF in a new tab."
+      "Starting download of my resume in PDF..."
     ]
   },
+
   "terminal.matrix.alreadyOn": {
     pt: "Modo Matrix já está ativo. Use 'matrix off' para desativar ou clique na janela.",
     en: "Matrix mode is already active. Use 'matrix off' to turn it off or click the window."
@@ -702,8 +758,17 @@ function setupTerminal() {
       } else if (lower === "show cv") {
         const lines = translations["terminal.showcv.lines"][currentLang];
         lines.forEach(printLine);
-        window.open("assets/cv/Joao_Vitor_Albero-CV.pdf", "_blank");
+
+        const cvPath = "assets/cv/Joao_Vitor_Albero-CV.pdf";
+        const link = document.createElement("a");
+        link.href = cvPath;
+        link.download = "Joao_Vitor_Albero-CV.pdf";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
         printEmptyLine();
+
       } else if (lower === "matrix") {
         if (matrixInterval) {
           const line = translations["terminal.matrix.alreadyOn"][currentLang];
@@ -756,7 +821,7 @@ function setLanguage(lang) {
   currentLang = lang;
   try {
     localStorage.setItem("joaoalbero_cv_lang", lang);
-  } catch (e) {}
+  } catch (e) { }
 
   const elements = document.querySelectorAll("[data-i18n]");
   elements.forEach((el) => {

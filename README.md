@@ -94,7 +94,7 @@ ou sirva com um servidor simples (exemplo com Python):
 
 # Python 3
 python -m http.server 8000
-# depois acesse: http://localhost:8000
+# Depois acesse: http://localhost:8000
 
 1. Clone the repository:
 
@@ -106,7 +106,7 @@ or use a simple static server (example with Python):
 
 # Python 3
 python -m http.server 8000
-# then go to: http://localhost:8000
+# Then go to: http://localhost:8000
 
 🌐 Deploy (GitHub Pages)
 

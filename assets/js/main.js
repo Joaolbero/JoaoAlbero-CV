@@ -119,7 +119,7 @@ const translations = {
     en: "Fruits:"
   },
   "snake.hint": {
-    pt: "Dica: comer uma fruta é normal… mas ao chegar em 10… algo muda 👾",
+    pt: "Dica: comer uma fruta é normal… Mas ao chegar em 10… algo muda 👾",
     en: "Hint: eating one fruit is normal… but once you reach 10… something changes 👾"
   },
 
